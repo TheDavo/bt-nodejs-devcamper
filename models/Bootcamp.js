@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const BootcampSchema = new mongoose.Schema({
   name: {
@@ -93,6 +94,16 @@ const BootcampSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+});
+
+// using a standard function due to the scoping of the 'this' keyword with arrow functions
+// the answer in this StackOverflow question helps answer how the 'this' keyword works in arrow functions (quick node: arrow functions do not come with a 'this' variable)
+// https://stackoverflow.com/questions/31095710/methods-in-es6-objects-using-arrow-functions
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this
+
+BootcampSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
 });
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);
