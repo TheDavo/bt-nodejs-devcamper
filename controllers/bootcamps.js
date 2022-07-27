@@ -105,7 +105,9 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
   // Divide distance by radius of Earth gives us the radians of the arc length
   // Earth radius = 3963 mi, 6378 km
 
-  const bootcamps = await Bootcamps.find({
+  const radius = distance / 3693;
+
+  const bootcamps = await Bootcamp.find({
     location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
   });
 
